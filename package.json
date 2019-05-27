@@ -1,0 +1,33 @@
+{
+  "name": "asciidoctor-wlparams",
+  "version": "1.0.0-alpha.2",
+  "description": "Asciidoctor white labeling extension for text/link parameterization",
+  "main": "dist/node/asciidoctor-wlparams.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RestComm/asciidoctor-whitelabeling-params.git"
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "clean": "rm -rf dist/*",
+    "dist": "npm run clean && npm run dist:node",
+    "dist:node": "mkdir -p dist/node && cp src/**.js dist/node/ && cp -r src/resources dist/node/",
+    "test": "mocha test/**.js"
+  },
+  "author": "Telestax Inc.",
+  "license": "GNU Affero General Public License v3.0",
+  "dependencies": {},
+  "devDependencies": {
+    "asciidoctor.js": "^1.5.9",
+    "chai": "^4.2.0",
+    "dirty-chai": "^2.0.1",
+    "mocha": "^6.1.4"
+  },
+  "bugs": {
+    "url": "https://github.com/RestComm/asciidoctor-wlparams/issues"
+  }
+}
