@@ -1,6 +1,6 @@
 {
   "name": "asciidoctor-wlparams",
-  "version": "1.0.0-alpha.2",
+  "version": "1.0.0-beta.2",
   "description": "Asciidoctor white labeling extension for text/link parameterization",
   "main": "dist/node/asciidoctor-wlparams.js",
   "repository": {
@@ -15,7 +15,7 @@
   "scripts": {
     "clean": "rm -rf dist/*",
     "dist": "npm run clean && npm run dist:node",
-    "dist:node": "mkdir -p dist/node && cp src/**.js dist/node/ && cp -r src/resources dist/node/",
+    "dist:node": "mkdir -p dist/node && cp src/**.js dist/node/",
     "test": "mocha test/**.js"
   },
   "author": "Telestax Inc.",
