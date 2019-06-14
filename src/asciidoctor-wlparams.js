@@ -2,78 +2,83 @@
  * @author: Antonis Tsakiridis
  */
 
-//const fs = require('fs')
 
 const generateParameterMarkup = function(parent, id, attrs) {
   let divHtml = '';
-  //console.log("Parent: " + parent);
-  //console.log("Target: " + id);
-  //console.log("Attrs: " + JSON.stringify(attrs));
 
-  if (id && id === 'localLink') {
-    let link = attrs.text;
+  let classes = [];
+
+  // Handle defaults and any normalizations
+  // default textMode to SPS
+  if (!attrs.textMode) {
+    attrs.textMode = 'non-sps';
+  }
+  if (!attrs.linkMode) {
+    attrs.linkMode = 'non-sps';
+  }
+  console.log("Attrs: " + JSON.stringify(attrs));
+  if (attrs.text.match(/^http/)) {
     // We need to add a '\' in the beginning of the link text so that asciidoctor
     // doesn't touch it (if we don't do that we get an additional <a> element)
     attrs.text = '\\' + attrs.text;
-    useSpan = false;
-    if (attrs.clickable && attrs.clickable === "false") {
-      divHtml += '<span';
-      useSpan = true;
-    }
-    else {
-      divHtml += `<a href="${link}"`;
-    }
+  }
 
-    divHtml += ` class="local-link">${attrs.text}`;
+  // Validations
+  if (attrs.textMode === 'sps' && (!attrs.parmText || attrs.parmText.length === 0)) {
+    console.error("SPS mode for text, but no SPS parameter name passed");
+  }
+  if (attrs.linkMode === 'sps' && (!attrs.parmLink || attrs.parmLink.length === 0)) {
+    console.error("SPS mode for link, but no SPS parameter link passed");
+  }
+  if (!attrs.text || attrs.text.length === 0) {
+    console.error("text parameter is mandatory");
+  }
 
-    if (useSpan) {
-      divHtml += '</span>'
-    } else {
-      divHtml += '</a>'
-    }
+  // Setup styling vars
+  if (attrs.textMode === 'non-sps') {
+    classes.push('non-sps-text');
   }
   else {
-    // We need to be backward compatible which means we need to support both:
-    // - old scheme: wlparam:application_name[rcText="Restcomm"]
-    // - new scheme: wlparam:sps[parmName="application_name",rcText="Restcomm"]
-    if (id !== 'sps' && !attrs.parmName) {
-      attrs.parmName = id;
-      id = 'sps'
-    }
-
-    divHtml = `<script>
-      // 'application_name' comes from inline macro
-      if (!window.replacementParams) {
-         window.replacementParams = {};
-      }
-      if (window.replacementParams.${attrs.parmName}) {
-         console.error('White labeled replacement parameter already exists: ' + ${attrs.parmName});
-      }
-      window.replacementParams.${attrs.parmName} = '';
-      </script>`
-
-    if (attrs.rcLink) {
-      divHtml += `<a class="${attrs.parmName}" href="${attrs.rcLink}"`
-    } else {
-      divHtml += `<span class="${attrs.parmName}"`
-    }
-
-    if (attrs.defaultText) {
-      divHtml += ` data-default-text="${attrs.defaultText}"`
-    }
-
-    if (attrs.defaultLink) {
-      divHtml += ` data-default-link="${attrs.defaultLink}"`
-    }
-
-    divHtml += `>${attrs.rcText}`
-
-    if (attrs.rcLink) {
-      divHtml += '</a>'
-    } else {
-      divHtml += '</span>'
-    }
+    classes.push('sps-text');
   }
+  if (attrs.linkMode === 'non-sps') {
+    classes.push('non-sps-link');
+  }
+  else {
+    classes.push('sps-link');
+  }
+
+  let isLink = false;
+  // Main logic
+  if (attrs.link && attrs.link.length > 0) {
+    divHtml += `<a href="${attrs.link}"`;
+    isLink = true;
+  }
+  else {
+    divHtml += `<span`;
+  }
+  divHtml += ` class="${classes.join(' ')}"`;
+  if (attrs.parmText && attrs.parmText.length > 0) {
+    divHtml += ` data-parm-text="${attrs.parmText}"`;
+  }
+  if (attrs.defaultText && attrs.defaultText.length > 0) {
+    divHtml += ` data-default-text="${attrs.defaultText}"`;
+  }
+  if (attrs.parmLink && attrs.parmLink.length > 0) {
+    divHtml += ` data-parm-link="${attrs.parmLink}"`;
+  }
+  if (attrs.defaultLink && attrs.defaultLink.length > 0) {
+    divHtml += ` data-default-link="${attrs.defaultLink}"`;
+  }
+
+  divHtml += `>${attrs.text}`;
+
+  if (isLink) {
+    divHtml += '</a>';
+  } else {
+    divHtml += '</span>';
+  }
+
   return divHtml;
 }
 
