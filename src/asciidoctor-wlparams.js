@@ -16,7 +16,7 @@ const generateParameterMarkup = function(parent, id, attrs) {
   if (!attrs.linkMode) {
     attrs.linkMode = 'non-sps';
   }
-  console.log("Attrs: " + JSON.stringify(attrs));
+  //console.log("Attrs: " + JSON.stringify(attrs));
   if (attrs.text.match(/^http/)) {
     // We need to add a '\' in the beginning of the link text so that asciidoctor
     // doesn't touch it (if we don't do that we get an additional <a> element)
