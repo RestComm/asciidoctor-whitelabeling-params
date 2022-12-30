@@ -25,7 +25,7 @@
     "asciidoctor.js": "^1.5.9",
     "chai": "^4.2.0",
     "dirty-chai": "^2.0.1",
-    "mocha": "^6.1.4"
+    "mocha": "^10.2.0"
   },
   "bugs": {
     "url": "https://github.com/RestComm/asciidoctor-wlparams/issues"
